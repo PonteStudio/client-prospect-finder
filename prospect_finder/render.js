@@ -14,10 +14,10 @@ const { chromium } = require('playwright');
       const url = queue.shift();
       const page = await ctx.newPage();
       try {
-        await page.goto(url, { waitUntil: 'networkidle', timeout: 20000 });
-        out[url] = await page.content();
+        const resp = await page.goto(url, { waitUntil: 'networkidle', timeout: 20000 });
+        out[url] = { html: await page.content(), status: resp ? resp.status() : 0 };
       } catch (e) {
-        try { out[url] = await page.content(); } catch (_) {}
+        try { out[url] = { html: await page.content(), status: 0 }; } catch (_) {}
       }
       await page.close();
     }

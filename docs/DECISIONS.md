@@ -27,6 +27,9 @@ Living document. Add a dated line whenever something is decided or changed.
 | 2026-11-14 | National chains and charity shops are removed automatically (OSM `brand` tag + a name list in `merge.py`). |
 | 2026-11-14 | Websites not listed anywhere are searched for for free by (a) trying the domain of a business email address and (b) guessing domains from the business name — a guess is accepted **only if the page shows the business's postcode or phone number**. |
 | 2026-11-14 | Search engines and social networks are **not scraped** (terms of service + the session blocks it). Instead, top leads can be **hand-checked by Claude with web search**, and the results are stored in `data/verified.csv` so they are reused on every later run. |
+| 2026-11-14 | Sites that block automated visitors (bot protection, HTTP 403/429) are **respected, not bypassed**: they are labelled "Website (could not check)" for a person to look at. |
+| 2026-11-14 | The browser session can only open secure (https) sites. If a site won't load securely, a public DNS lookup (dns.google) decides: domain gone → "Website not working"; domain alive → "Website – no secure version" (http-only or down). |
+| 2026-11-14 | OpenStreetMap is downloaded in ~12 km tiles with back-off because the public Overpass servers are busy (a full area took ~2.5 h the first time). The Geofabrik bulk download is not reachable from the session. |
 | 2026-11-14 | Google PageSpeed/Lighthouse API needs a key (returns "quota exceeded" without one), so the prototype does its own objective checks instead. |
 
 ### Scoring (0–100, weights in `config.py`)
@@ -51,6 +54,8 @@ Living document. Add a dated line whenever something is decided or changed.
 |---|---|
 | 2026-11-10 | Run manually through **Claude Code in the browser** (no local installs). Automating with a scheduled agent is a later option. |
 | 2026-11-14 | GitHub repo `client-prospect-finder`. One temporary branch per chat → pull request → merge into `main` → branch deleted automatically. Only `main` lives on. |
+| 2026-11-14 | First full scan uploaded: Google Sheet "Ponte prospects – Workington 48 km – 2026-11-14" (tabs: Prospects, About this run). |
+| 2026-11-14 | `python -m prospect_finder.rescore` re-scores a saved run (e.g. after hand-checks) without downloading everything again. |
 | 2026-11-14 | Code: small Python package (`prospect_finder/`), plus a Node/Playwright helper that re-checks JavaScript-built sites in a real browser. |
 
 ## Ways to improve
@@ -72,6 +77,9 @@ Roughly in order of value.
 13. **Respect contact rules**: flag sole traders (consent needed for marketing email under PECR) and check the TPS before calls.
 
 ## Known limitations (prototype)
+
+- Plain http:// pages can't be opened from the browser session, so http-only sites are flagged from DNS evidence rather than inspected.
+- Instagram links are rarely in open data, so "Social media only" is undercounted (most social-only businesses currently appear as "No website found").
 
 - Only food/hospitality businesses are near-complete (hygiene register). Other sectors depend on OpenStreetMap coverage, which is patchy outside towns.
 - "No website found" is often "we couldn't find it" — check before contacting (see Confidence).

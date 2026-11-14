@@ -105,9 +105,27 @@ def _slug_variants(name: str, town: str) -> list[str]:
     return out[:9]
 
 
-def _get(url: str, timeout=None):
-    return requests.get(url, headers=UA, timeout=timeout or config.HTTP_TIMEOUT,
-                        allow_redirects=True)
+class _Slow(Exception):
+    pass
+
+
+def _get(url: str, timeout=None, max_bytes=3_000_000):
+    """GET with a hard overall deadline and size cap (some servers trickle data forever)."""
+    limit = timeout or config.HTTP_TIMEOUT
+    start = time.time()
+    with requests.get(url, headers=UA, timeout=min(limit, 8), allow_redirects=True,
+                      stream=True) as r:
+        chunks, size = [], 0
+        for chunk in r.iter_content(65536):
+            chunks.append(chunk)
+            size += len(chunk)
+            if size > max_bytes:
+                break
+            if time.time() - start > limit + 5:
+                raise _Slow(url)
+        r._content = b"".join(chunks)
+        r._content_consumed = True
+        return r
 
 
 def _page_mentions(html: str, rec: dict) -> str:
@@ -176,9 +194,11 @@ def audit(rec: dict) -> dict:
     r = None
     last_err = ""
     # Try the listed address, then the http/https and www variants, before calling it dead.
-    variants = [url]
     d = domain_of(url)
-    for v in (f"https://{d}", f"https://www.{d}", f"http://{d}", f"http://www.{d}"):
+    path = urlparse(url).path
+    variants = []
+    for v in (url.replace("http://", "https://", 1), f"https://{d}", f"https://www.{d}", url,
+              f"http://{d}", f"http://www.{d}"):
         if v not in variants:
             variants.append(v)
     t0 = time.time()
@@ -192,12 +212,36 @@ def audit(rec: dict) -> dict:
         except Exception as e:  # noqa: BLE001
             last_err = type(e).__name__
     if r is None:
-        res.update(status="error", error="the site does not load at all (domain may have expired "
-                                         f"or hosting is down; {last_err})")
+        dns = dns_status(d)
+        if dns == "missing":
+            res.update(status="error", error="the domain no longer exists (expired or never set up)")
+        elif dns == "ok":
+            # Domain is live but nothing answered securely. Either the site only works on old,
+            # insecure http:// (which this checker can't open) or the hosting is down.
+            res.update(status="no_https", error="the site doesn't load over a secure (https) "
+                                                "connection – it is either http-only or down")
+        else:
+            res.update(status="error", error=f"the site does not load at all ({last_err})")
         return res
+    # A listed deep link that 404s doesn't mean the site is broken: try the homepage.
+    if r.status_code in (404, 410) and urlparse(r.url).path not in ("", "/"):
+        try:
+            root = f"{urlparse(r.url).scheme}://{urlparse(r.url).netloc}/"
+            t0 = time.time()
+            r2 = _get(root)
+            if r2.status_code < 400:
+                r = r2
+                res["note"] = "listed link was out of date; checked the homepage instead"
+        except Exception:  # noqa: BLE001
+            pass
     res["load_seconds"] = round(time.time() - t0, 1)
     res["final_url"] = r.url
     res["http_status"] = r.status_code
+    if r.status_code in (401, 403, 429, 503, 999):
+        # Usually bot protection (e.g. Cloudflare), not a broken site. We respect it and
+        # leave the site for a person to look at.
+        res.update(status="blocked", error=f"the site does not allow automated checks ({r.status_code})")
+        return res
     if r.status_code >= 400:
         res.update(status="error", error=f"the site returns error {r.status_code}")
         return res
@@ -208,9 +252,24 @@ def audit(rec: dict) -> dict:
     return res
 
 
+def dns_status(domain: str) -> str:
+    """'ok', 'missing' (NXDOMAIN) or 'unknown', via Google's public DNS-over-HTTPS."""
+    try:
+        r = requests.get("https://dns.google/resolve", params={"name": domain, "type": "A"},
+                         headers=UA, timeout=10)
+        st = r.json().get("Status")
+        if st == 3:
+            return "missing"
+        if st == 0:
+            return "ok" if r.json().get("Answer") else "missing"
+    except Exception:  # noqa: BLE001
+        pass
+    return "unknown"
+
+
 def analyse(html: str, final_url: str, https: bool) -> dict:
     """Objective checks on one page's HTML."""
-    res: dict = {}
+    res: dict = {"placeholder": False}
     soup = BeautifulSoup(html, "lxml")
     low = html.lower()
     final_dom = domain_of(final_url)
@@ -221,7 +280,7 @@ def analyse(html: str, final_url: str, https: bool) -> dict:
     # parked / placeholder pages
     text = soup.get_text(" ", strip=True)
     res["words"] = len(text.split())
-    if res["words"] < 150 and re.search(r"domain (is )?for sale|this domain (has been|is) (registered|parked)|"
+    if res["words"] < 80 and re.search(r"domain (is )?for sale|this domain (has been|is) (registered|parked)|"
                  r"coming soon|under construction|website is under maintenance|"
                  r"buy this domain|parked free", text[:3000], re.I):
         res["placeholder"] = True
@@ -356,15 +415,20 @@ def run_all(records: list[dict], log=print, discover_sectors=None, archive=True)
             if done % 50 == 0:
                 log(f"    {done}/{len(sites)}")
 
-    # Pages with almost no text in their raw HTML usually build their content with
-    # JavaScript (Wix, Squarespace, React…). Re-check those in a real browser.
+    rerender_thin(sites, log)
+
+
+def rerender_thin(sites: list[dict], log=print) -> None:
+    """Pages with almost no text in their raw HTML usually build their content with
+    JavaScript (Wix, Squarespace, React…). Re-check those in a real browser."""
     thin = [r for r in sites if (r.get("audit") or {}).get("status") == "ok"
             and (r["audit"].get("words") or 0) < 150]
     if thin:
         log(f"  re-checking {len(thin)} JavaScript-heavy pages in a real browser…")
         rendered = render_pages([r["audit"]["final_url"] for r in thin], log)
         for r in thin:
-            html = rendered.get(r["audit"]["final_url"])
+            got = rendered.get(r["audit"]["final_url"]) or {}
+            html = got.get("html") if isinstance(got, dict) else got
             if html:
                 r["audit"].update(analyse(html, r["audit"]["final_url"], r["audit"]["https"]))
                 r["audit"]["rendered"] = True

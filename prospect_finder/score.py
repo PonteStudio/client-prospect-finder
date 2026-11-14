@@ -144,6 +144,12 @@ def presence(rec: dict) -> str:
     if rec.get("website") and a:
         if a.get("status") == "error":
             return "Website not working"
+        if a.get("status") == "no_https":
+            return "Website – no secure version"
+        if a.get("status") == "blocked":
+            return "Website (could not check)"
+        if a.get("status") == "blocked":
+            return "Website (could not check)"
         if a.get("placeholder"):
             return "Placeholder website"
         if a.get("redirects_to"):
@@ -205,6 +211,22 @@ def evaluate(rec: dict, centre: tuple[float, float], radius_km: float) -> None:
         findings.append(f"Website listed ({rec['website']}) but not working: {a.get('error')}")
         findings.append("Why it matters: customers who click get an error – urgent, easy to explain")
         services |= {"Website", "Consulting"}
+    elif p == "Website (could not check)":
+        opp = 0.25
+        confidence = "Low – site does not allow automated checks; look at it by hand"
+        findings.append(f"Has a website ({rec['website']}) that does not allow automated checks – look manually")
+    elif p == "Website – no secure version":
+        opp = 0.75
+        confidence = "Medium – open the site to confirm it loads"
+        findings.append(f"Website ({rec['website']}) has no working secure (https) version – "
+                        "browsers show 'Not secure' or the site is down")
+        findings.append("Why it matters: Chrome warns visitors away from insecure sites and Google "
+                        "ranks them lower; usually a sign the whole site is dated")
+        services |= {"Website", "SEO"}
+    elif p == "Website (could not check)":
+        opp = 0.25
+        confidence = "Low – site does not allow automated checks; look at it by hand"
+        findings.append(f"Has a website ({rec['website']}) that does not allow automated checks – look manually")
     elif p == "Placeholder website":
         opp = 0.9
         findings.append("Website is just a placeholder / 'coming soon' page")

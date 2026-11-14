@@ -1,0 +1,30 @@
+{
+ "centre": "Workington",
+ "lat": 54.6425,
+ "lon": -3.5444,
+ "radius_km": 48.0,
+ "sectors": "all",
+ "date": "2026-11-14T21:12",
+ "businesses": 4086,
+ "chains_removed": 579,
+ "presence": {
+  "No website found": 2550,
+  "Has website": 1031,
+  "Website not working": 388,
+  "Social media only": 78,
+  "Listing pages only": 32,
+  "Placeholder website": 7
+ },
+ "sectors_found": {
+  "Hospitality": 2487,
+  "Retail": 754,
+  "Health & Beauty": 268,
+  "Leisure & Attractions": 215,
+  "Professional services": 113,
+  "Food production": 98,
+  "Automotive": 71,
+  "Trades & Home": 63,
+  "Other": 17
+ },
+ "minutes": 39.0
+}
