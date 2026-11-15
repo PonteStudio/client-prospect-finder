@@ -1,1 +1,41 @@
-ID,Name,Checked on,Website,Facebook,Instagram,Other links,No website confirmed,Notes
+ID,Name,Checked on,Website,Facebook,Instagram,Other links,No website confirmed,Notes,Exclude (reason)
+c55d2b204f,Baldry's Tearoom,2026-11-15,,,,,yes,"Old site baldryscottage.co.uk is gone; no replacement found. Very popular (~1,490 Tripadvisor reviews), bakes daily, also lets a holiday cottage.",
+d1d715a633,Tarantella,2026-11-15,,,,quandoo.co.uk,yes,"Listed site is dead; no own site found, only Quandoo/review sites. Popular Italian (~290–480 reviews), booking recommended.",
+9c13947e80,Sultan of Keswick,2026-11-15,,,,,yes,"No website found; ~440–550 reviews; full bar, booking recommended.",
+a00052a47c,Asaya Thai,2026-11-15,https://sites.google.com/view/asayathai,,,,,"Only a free Google Sites page; old listed domain is gone. ~500–600 reviews, open 7 days.",
+341b31b4ed,Seacote Hotel,2026-11-15,,,,,yes,"3-star hotel 200 m from St Bees beach; no own website found, relies on Booking.com/Expedia/Hotels.com.",
+6ee8ec7655,Sella Park Hotel,2026-11-15,http://www.sellaparkhotel.co.uk/,,,,,16-room country house hotel (AA rosette history); site has no secure (https) version; mostly booked via OTAs.,
+3478b18f4b,Queens Hotel,2026-11-15,,,,,yes,"Village pub-hotel, ~640 Booking.com reviews, on the Coast to Coast route; no own website found.",
+3125bcfa5a,Beckfoot Retreat B&B,2026-11-15,,,,,yes,"Listed site is dead; no replacement found. Lakeside B&B, 4.9 from 56 reviews; dark-sky location.",
+53c8585195,Rivendell Guest House,2026-11-15,,,,,yes,"Listed site (old name, Squirrel Lodge) is gone; 7 rooms, 4.75/5 from ~490 ratings; booked via OTAs.",
+da00884604,The Filling Station Cafe,2026-11-15,,,,,yes,"Listed domain no longer exists; well-known biker café (since 2011), live music nights, open all year.",
+98c1d09231,The Moon & Sixpence Coffeehouse,2026-11-15,,,,,yes,Award-winning speciality coffee shop; expanded to Keswick lakeside + coffee van; only Facebook found.,
+f855ca79d3,Portobello Wood Fired Maryport,2026-11-15,,,,,yes,"Very well reviewed ('best place to eat in Maryport'), always busy, takeaway too; no website.",
+7458c7b420,Lara Restaurant,2026-11-15,,,,,yes,Opened 2024; 4.8 from ~150 reviews; no website found.,
+e35decabc9,The Wilson Arms,2026-11-15,,,,,yes,"Listed site is dead; family-run inn with 7 rooms, campsite and deli near Coniston.",
+710d7683d5,Stanley Arms Hotel,2026-11-15,,,,,yes,Listed site is dead; 14-room village hotel. An agent listing showed it for sale (date unknown) – check ownership first.,
+7f3880719b,Ennerdale Country House Hotel,2026-11-15,,,,,yes,"Former group page (Bespoke Hotels) returns 'gone'; no own site found, only OTAs. Grade II house, a la carte restaurant. Check who owns/manages it now.",
+b693322754,The Heights Hotel,2026-11-15,https://www.theheightshotel.co.uk/,,,,,"Checked: not mobile-friendly, copyright 2018, old code, insecure content.",
+20634a8194,The Crafty Baa,2026-11-15,,,,,yes,"Popular quirky bar, live music weekly; Facebook only.",
+801c319f98,Java Coffee Shop,2026-11-15,,,,,yes,Popular independent coffee shop on Main St; Facebook only.,
+d0ee859770,Fermento - Italian Family Kitchen,2026-11-15,,,,,yes,"Small (4 tables) family pizzeria, well reviewed; no website.",
+561792421c,The Royal Oak Inn,2026-11-15,,,,,yes,"Listed site is dead; village pub with food, near Carlisle.",
+a9ff000aba,Lion & Lamb,2026-11-15,,,,,yes,"Listed site is dead; sports bar with rooms in Gosforth, live music.",
+da3e6ab217,The Globe Inn,2026-11-15,https://globeinngosforth.co.uk/,,,,,Website is only a placeholder; pub with rooms (contractor trade).,
+1b26947675,Castle Knights,2026-11-15,,,,,yes,Listed site is dead; bar & grill with big beer garden. A property listing showed it for sale – check status.,
+36384edbb1,Syke Farm Tea Room,2026-11-15,,,,,yes,"No website found; tea room + own-herd ice cream, busy with walkers/cyclists.",
+578bc0d381,Henry's Lakeland Diner,2026-11-15,,,,,yes,"Retro diner, licensed; Facebook only.",
+8bebb551f2,Yonder,2026-11-15,,,,,yes,"Newer café (Red Bank coffee), well reviewed; Instagram only.",
+a72dd93cbf,The Barn Campsite,2026-11-15,,,,,yes,Only on Pitchup + Facebook; well-reviewed rural campsite near Wasdale.,
+6348968b11,Black Bull Inn,2026-11-15,,,,,yes,"Town-centre pub, no website (CAMRA lists none).",
+d5755c1e92,Washington Central Hotel,2026-11-15,https://www.washingtoncentralhotel.co.uk/,,,,,"Real site is washingtoncentralhotel.co.uk (WordPress, reasonable). OpenStreetMap had an old link.",
+f6fb831517,New Dungeon Ghyll Hotel,2026-11-15,https://dungeon-ghyll.com/,,,,,Real site is dungeon-ghyll.com (current).,
+9b3f2b967d,Hazel Bank Hotel,2026-11-15,https://www.hazelbankhotel.co.uk/,,,,,Real site is hazelbankhotel.co.uk (current).,
+e49087ee99,Herdwick Inn,2026-11-15,https://herdwickinn.co.uk/,,,,,"Real site is herdwickinn.co.uk (current, minor issues).",
+f4543a7414,Yam Frae Yam,2026-11-15,,,,,,,Closed (listed as permanently closed)
+4d64046421,Old Travellers Rest,2026-11-15,,,,,,,"Now a self-catering holiday let, not a business to pitch"
+4e5c6e5ac1,The Tithe Tap,2026-11-15,,,,,,,Brewery tap (Jennings) – not an independent
+af1b9fff78,Watermill Cafe,2026-11-15,,,,,,,Business advertised for sale/let – revisit later
+2e8cf94492,Bamboo Restaurant,2026-11-15,,,,,,,Building and business for sale (Oct 2025) – revisit later
+3c740cee20,The Lion,2026-11-15,,,,,,,Now 'Emily's Black Lion'; trading status unclear (community buy-out / sale)
+ac81e60844,Daffodil Hotel,2026-11-15,,,,,,,Part of Crerar Hotels group – not an independent

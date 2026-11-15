@@ -49,6 +49,14 @@ Living document. Add a dated line whenever something is decided or changed.
 | 2026-11-10 | List **every contact route found** (email, phone, Facebook, Instagram, other links) and a **best contact route** suggestion. Social media counts as a valid route, especially for social-only businesses. |
 | 2026-11-14 | Columns `Status`, `Notes`, `First seen` belong to the team; re-runs carry them over (`--previous`). |
 
+### Best Leads list
+| Date | Decision |
+|---|---|
+| 2026-11-15 | Two Google Sheets: the **full list** ("Ponte prospects – Workington 48 km – 2026-11-14") and a separate **Best Leads** sheet ("Ponte – Best Leads (top 50) – 2026-11-15") with the top 50 to contact first, in priority order. |
+| 2026-11-15 | Best Leads are picked by Claude after analysis, not just by score: filter out public services, clubs, franchises and non-trading places → shortlist ~110 → hand-check the strongest by web search (still trading? new website? size/popularity) → order by gap × size × confidence, hospitality first. |
+| 2026-11-15 | Hand-check results live in `data/verified.csv`, including an "Exclude (reason)" column (closed, chain, for sale…). Excluded rows stay in the full list with score 0. |
+| 2026-11-15 | Lesson: many "website not working" leads from OpenStreetMap are just **old links** – the business moved to a new domain. Always verify before contacting. |
+
 ### Way of working
 | Date | Decision |
 |---|---|
@@ -77,6 +85,8 @@ Roughly in order of value.
 13. **Respect contact rules**: flag sole traders (consent needed for marketing email under PECR) and check the TPS before calls.
 
 ## Known limitations (prototype)
+
+- About half of the Best Leads are hand-checked; the rest are marked "From scan data" in the sheet.
 
 - Plain http:// pages can't be opened from the browser session, so http-only sites are flagged from DNS evidence rather than inspected.
 - Instagram links are rarely in open data, so "Social media only" is undercounted (most social-only businesses currently appear as "No website found").

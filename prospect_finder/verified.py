@@ -10,7 +10,7 @@ import csv
 import os
 
 FIELDS = ["ID", "Name", "Checked on", "Website", "Facebook", "Instagram", "Other links",
-          "No website confirmed", "Notes"]
+          "No website confirmed", "Notes", "Exclude (reason)"]
 
 
 def load(path: str) -> dict[str, dict]:
@@ -40,5 +40,6 @@ def apply(records: list[dict], path: str) -> int:
             r.setdefault("listings", []).extend(x.strip() for x in v["Other links"].split(";") if x.strip())
         r["verified"] = {"date": v.get("Checked on", ""),
                          "no_website": (v.get("No website confirmed") or "").strip().lower() in ("yes", "y", "true", "1"),
-                         "notes": v.get("Notes", "")}
+                         "notes": v.get("Notes", ""),
+                         "exclude": (v.get("Exclude (reason)") or "").strip()}
     return n

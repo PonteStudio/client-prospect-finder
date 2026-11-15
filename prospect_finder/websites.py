@@ -64,7 +64,8 @@ def link_kind(url: str) -> tuple[str, str]:
     for sd, net in SOCIAL_DOMAINS.items():
         if d == sd or d.endswith("." + sd):
             return "social", net
-    if any(x in d for x in LISTING_DOMAINS):
+    # Match whole domain labels only ("hotels.com" must not match "crerarhotels.com").
+    if any(re.search(r"(^|\.)" + re.escape(x), d) for x in LISTING_DOMAINS):
         return "listing", d
     return "website", d
 
