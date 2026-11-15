@@ -152,8 +152,13 @@ def presence(rec: dict) -> str:
             return "Website (could not check)"
         if a.get("placeholder"):
             return "Placeholder website"
-        if a.get("redirects_to"):
-            return "Social media only"
+        if a.get("final_url"):
+            from .websites import link_kind
+            kind, _ = link_kind(a["final_url"])
+            if kind == "social":
+                return "Social media only"
+            if kind == "listing":
+                return "Listing pages only"
         return "Has website"
     if socials:
         return "Social media only"
@@ -202,7 +207,8 @@ def evaluate(rec: dict, centre: tuple[float, float], radius_km: float) -> None:
     elif p == "Listing pages only":
         opp = 0.85
         findings.append("Only appears on directory/booking listings: " + ", ".join(
-            sorted({l.split('/')[2] if '//' in l else l for l in rec['listings']}))[:120])
+            sorted({l.split('/')[2] if '//' in l else l
+                       for l in (rec.get('listings') or [a.get('final_url') or rec.get('website', '')])}))[:120])
         findings.append("Why it matters: paying commission/fees to third parties for every "
                         "customer; a direct site keeps the margin")
         services |= {"Website", "Google Business Profile", "SEO"}
@@ -293,6 +299,10 @@ def evaluate(rec: dict, centre: tuple[float, float], radius_km: float) -> None:
         "contactability": contact * w["contactability"],
     }
     rec["score"] = round(sum(parts.values()))
+    if ver.get("exclude"):
+        # Hand-checked and ruled out (closed, chain, for sale…): keep the row, sink it.
+        rec["score"] = 0
+        findings.insert(0, "EXCLUDED after manual check: " + ver["exclude"])
     rec["score_parts"] = {k: round(v) for k, v in parts.items()}
     rec["findings"] = findings
     rec["issues"] = issues

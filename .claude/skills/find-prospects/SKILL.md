@@ -42,7 +42,15 @@ to look for each business's website, Facebook and Instagram. Record each result 
 `data/verified.csv` (one row per business, use the `ID` column from the CSV), then re-run with
 the cached data and re-upload. Commit `data/verified.csv`.
 
-## 6. Finish
+## 6. Best Leads (top 50)
+
+When asked for the best leads: shortlist from `output/prospects_full.json` (drop public
+services, clubs, franchises, non-trading), hand-check the strongest with web search, record
+every check in `data/verified.csv` (use "Exclude (reason)" for closed/chain/for-sale), rescore
+with `python -m prospect_finder.rescore`, then write a ranked CSV (Priority, why, what to pitch,
+contacts, Checked = hand-checked / from scan data) and upload it as its own Sheet.
+
+## 7. Finish
 
 Summarise: how many businesses, the split by online presence, the top 10, anything odd.
 Note new decisions/ideas in `docs/DECISIONS.md`. Commit, open a PR to `main`, merge.
